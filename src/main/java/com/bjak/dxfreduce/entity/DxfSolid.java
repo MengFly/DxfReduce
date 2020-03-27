@@ -1,6 +1,5 @@
 package com.bjak.dxfreduce.entity;
 
-import com.bjak.dxfreduce.entity.base.Entity;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
 import com.bjak.dxfreduce.util.DxfUtil;
 import lombok.Getter;
@@ -13,8 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Solid {
-    private Circle circle;
+public class DxfSolid {
+    private DxfCircle dxfCircle;
 
     public String getDxfStr() {
 
@@ -32,14 +31,14 @@ public class Solid {
                 // 下面的这一部分是填充的对象属性的描述
                 // 边界类型 1 = 直线；2 = 圆弧；3 = 椭圆弧；4 = 样条曲线
                 .append(72, 2)
-                .append(10, circle.getCenter().getX())
-                .append(20, circle.getCenter().getY())
-                .append(30, circle.getCenter().getZ())
-                .append(40, circle.getRadius());
+                .append(10, dxfCircle.getCenter().getX())
+                .append(20, dxfCircle.getCenter().getY())
+                .append(30, dxfCircle.getCenter().getZ())
+                .append(40, dxfCircle.getRadius());
         // 下面是圆弧的属性，50-起始角度，51-端点角度， 73-逆时针标志
-        if (circle instanceof Arc) {
-            builder.append(50, ((Arc) circle).getStartAngle());
-            builder.append(51, ((Arc) circle).getEndAngle());
+        if (dxfCircle instanceof DxfArc) {
+            builder.append(50, ((DxfArc) dxfCircle).getStartAngle());
+            builder.append(51, ((DxfArc) dxfCircle).getEndAngle());
         } else {
             builder.append(50, 0.0).append(51, 360);
         }
@@ -47,7 +46,7 @@ public class Solid {
                 // 源边界对象数
                 .append(97, 1)
                 // 源边界对象的参照
-                .append(330, DxfUtil.formatMeta(circle.getMeta()))
+                .append(330, DxfUtil.formatMeta(dxfCircle.getMeta()))
                 // 图案填充样式：,0 = 填充“奇数奇偶校验”区域（普通样式）,1 = 仅填充最外层区域（“外部”样式）,2 = 填充整个区域（“忽略”样式）
                 .append(75, 0)
                 //填充图案类型：0 = 用户定义；1 = 预定义；2 = 自定义
@@ -55,8 +54,8 @@ public class Solid {
                 // 种子点数
                 .append(98, 1)
                 // 种子点位置 10-x, 20-y
-                .append(10, circle.getCenter().getX())
-                .append(20, circle.getCenter().getY());
+                .append(10, dxfCircle.getCenter().getX())
+                .append(20, dxfCircle.getCenter().getY());
         return builder.toString();
     }
 }

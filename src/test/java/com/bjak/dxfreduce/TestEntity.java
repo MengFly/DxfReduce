@@ -1,6 +1,6 @@
 package com.bjak.dxfreduce;
 
-import com.bjak.dxfreduce.entity.Circle;
+import com.bjak.dxfreduce.entity.DxfCircle;
 
 public class TestEntity {
 
@@ -10,10 +10,10 @@ public class TestEntity {
     }
 
     private static void testCircle() {
-        Circle circle = new Circle();
-        circle.setCenter(new Vector3(100, 100, 100));
-        circle.setRadius(100);
-        circle.setMeta(1);
-        System.out.println(circle.getDxfStr());
+        DxfCircle dxfCircle = new DxfCircle();
+        dxfCircle.setCenter(new Vector3(100, 100, 100));
+        dxfCircle.setRadius(100);
+        dxfCircle.setMeta(1);
+        System.out.println(dxfCircle.getDxfStr());
     }
 }

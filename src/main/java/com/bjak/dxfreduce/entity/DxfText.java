@@ -1,17 +1,30 @@
 package com.bjak.dxfreduce.entity;
 
 import com.bjak.dxfreduce.Vector3;
-import com.bjak.dxfreduce.entity.base.BaseEntity;
+import com.bjak.dxfreduce.entity.base.BaseDxfEntity;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 文字
+ * @author wangp
+ */
 @Getter
 @Setter
-public class Text extends BaseEntity {
+public class DxfText extends BaseDxfEntity {
 
+    /**
+     * 不翻转
+     */
     public static final int REVERSE_TYPE_NONE = 0;
+    /**
+     * 沿X轴方向镜像翻转
+     */
     public static final int REVERSE_TYPE_X = 2;
+    /**
+     * 沿Y轴方向镜像翻转
+     */
     public static final int REVERSE_TYPE_Y = 4;
 
 //    public static final int ALIGN_HORIZONTAL_LEFT = 0;
@@ -24,10 +37,25 @@ public class Text extends BaseEntity {
 //    public static final int ALIGN_VERTICAL_BASE_TOP = 3;
 
 
+    /**
+     * 文字的起始位置
+     */
     private Vector3 startPoint;
+    /**
+     * 文字的高度
+     */
     private double high = 0;
+    /**
+     * 文字的宽度
+     */
     private int width = 1;
+    /**
+     * 文字内容
+     */
     private String text;
+    /**
+     * 旋转角度
+     */
     private double angle = 0;
     private double inclination = 0;
     private String textStyle = "标准";

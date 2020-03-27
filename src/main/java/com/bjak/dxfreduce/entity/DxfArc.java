@@ -4,11 +4,21 @@ import com.bjak.dxfreduce.util.DxfLineBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 圆弧
+ *
+ * @author wangp
+ */
 @Getter
 @Setter
-public class Arc extends Circle {
-
+public class DxfArc extends DxfCircle {
+    /**
+     * 起始角度(0-360)
+     */
     private double startAngle;
+    /**
+     * 结束角度(0-360)
+     */
     private double endAngle;
 
     @Override

@@ -1,13 +1,13 @@
 package com.bjak.dxfreduce.entity;
 
-import com.bjak.dxfreduce.entity.base.BaseEntity;
+import com.bjak.dxfreduce.entity.base.BaseDxfEntity;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
 
 
 /**
  * @author wangp
  */
-public class Hatch extends BaseEntity {
+public class DxfHatch extends BaseDxfEntity {
 
     public enum HatchType {
         /**
@@ -16,14 +16,14 @@ public class Hatch extends BaseEntity {
         SOLID;
     }
 
-    private Solid solid;
+    private DxfSolid dxfSolid;
 
-    public static Hatch buildHatchBy(Circle circle) {
-        Hatch hatch = new Hatch();
-        hatch.solid = new Solid();
-        hatch.solid.setCircle(circle);
-        hatch.color = circle.getSolidColor() == null ? circle.getColor() : circle.getSolidColor();
-        return hatch;
+    public static DxfHatch buildHatchBy(DxfCircle dxfCircle) {
+        DxfHatch dxfHatch = new DxfHatch();
+        dxfHatch.dxfSolid = new DxfSolid();
+        dxfHatch.dxfSolid.setDxfCircle(dxfCircle);
+        dxfHatch.color = dxfCircle.getSolidColor() == null ? dxfCircle.getColor() : dxfCircle.getSolidColor();
+        return dxfHatch;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Hatch extends BaseEntity {
                 .append(210, 0.0)
                 .append(220, 0.0)
                 .append(230, 1.0)
-                .append(solid.getDxfStr())
+                .append(dxfSolid.getDxfStr())
                 .toString();
     }
 

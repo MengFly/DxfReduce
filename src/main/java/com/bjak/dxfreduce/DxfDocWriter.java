@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * Dxf处理类，支持向矿图中添加自定义图形，目前支持的图形有圆形Circle，圆弧Arc，直线Line，多线段LwPolyLine，文字Text
- * 目前仅仅支持对圆形Circle和其子类Arc的颜色填充。 可以通过调用 {@link #addEntity(Entity)} 和 {@link #removeEntity(Entity)}
+ * 目前仅仅支持对圆形Circle和其子类Arc的颜色填充。 可以通过调用 {@link #addEntity(DxfEntity)} 和 {@link #removeEntity(DxfEntity)}
  * 进行自定义图元的添加和删除。
  * <p>
  * 并支持对新dxf文件的导出，可以选择调用函数 {@link #save(String, boolean)} 导出所有文件，这样的文件可以在AutoCad中打开
@@ -31,13 +31,13 @@ import java.util.*;
  */
 @Log4j
 @SuppressWarnings("unused")
-public class DxfDocument implements Closeable {
+public class DxfDocWriter implements Closeable {
     /**
      * 当选择保存为dxf文件的时候，要保留的Entities类型的数组，不在数组中的对象将会被忽略掉（不包含自定义加入的图元）
      */
     public static final String[] DEFAULT_ENTITY_NO_REDUCE_PART = {"LINE", "CIRCLE", "ARC", "TEXT", "MTEXT", "LWPOLYLINE"};
     private List<String> entityNoReducePart = Arrays.asList(DEFAULT_ENTITY_NO_REDUCE_PART);
-    private List<Entity> newEntityList;
+    private List<DxfEntity> newDxfEntityList;
     private long maxMeta;
     private Charset charset;
 
@@ -49,7 +49,7 @@ public class DxfDocument implements Closeable {
      *
      * @param dxfFilePath dxf文件位置
      */
-    public DxfDocument(String dxfFilePath) {
+    public DxfDocWriter(String dxfFilePath) {
         this(dxfFilePath, StandardCharsets.UTF_8);
     }
 
@@ -60,9 +60,9 @@ public class DxfDocument implements Closeable {
      * @param charset     文件编码
      * @see StandardCharsets
      */
-    public DxfDocument(String dxfFilePath, Charset charset) {
+    public DxfDocWriter(String dxfFilePath, Charset charset) {
         this.charset = charset;
-        newEntityList = new ArrayList<>();
+        newDxfEntityList = new ArrayList<>();
         if (dxfFilePath != null) {
             this.dxfFile = new File(dxfFilePath);
             try {
@@ -79,38 +79,38 @@ public class DxfDocument implements Closeable {
     /**
      * 创建一个空的dxf文件
      */
-    public DxfDocument() {
+    public DxfDocWriter() {
         this(null, StandardCharsets.UTF_8);
     }
 
     /**
-     * 向矿图文件中添加一个图元，目前仅仅支持  {@link Circle},{@link Arc},{@link Line},{@link LwPolyLine},{@link Text}
+     * 向矿图文件中添加一个图元，目前仅仅支持  {@link DxfCircle},{@link DxfArc},{@link DxfLine},{@link DxfLwPolyLine},{@link DxfText}
      * <p>
-     * 也可以通过继承 {@link BaseEntity} 或实现 {@link Entity} 接口来扩展图元
+     * 也可以通过继承 {@link BaseDxfEntity} 或实现 {@link DxfEntity} 接口来扩展图元
      *
-     * @param entity 图元
+     * @param dxfEntity 图元
      */
-    public void addEntity(Entity entity) {
-        if (entity instanceof LwPolyLine) {
-            if (((LwPolyLine) entity).isEmpty()) {
+    public void addEntity(DxfEntity dxfEntity) {
+        if (dxfEntity instanceof DxfLwPolyLine) {
+            if (((DxfLwPolyLine) dxfEntity).isEmpty()) {
                 log.warn("LwPolyLine not contains any point, will ignore this entity");
                 return;
             }
         }
-        entity.setMeta(++maxMeta);
-        this.newEntityList.add(entity);
-        if (entity instanceof Circle && ((Circle) entity).isSolid()) {
-            addEntity(Hatch.buildHatchBy((Circle) entity));
+        dxfEntity.setMeta(++maxMeta);
+        this.newDxfEntityList.add(dxfEntity);
+        if (dxfEntity instanceof DxfCircle && ((DxfCircle) dxfEntity).isSolid()) {
+            addEntity(DxfHatch.buildHatchBy((DxfCircle) dxfEntity));
         }
     }
 
     /**
      * 移除一个自定义的图元
      *
-     * @param entity 图元
+     * @param dxfEntity 图元
      */
-    public void removeEntity(Entity entity) {
-        this.newEntityList.remove(entity);
+    public void removeEntity(DxfEntity dxfEntity) {
+        this.newDxfEntityList.remove(dxfEntity);
     }
 
     /**
@@ -299,8 +299,8 @@ public class DxfDocument implements Closeable {
     }
 
     private void appendNewEntities(StringBuffer buffer) {
-        for (Entity entity : newEntityList) {
-            buffer.append(entity.getDxfStr());
+        for (DxfEntity dxfEntity : newDxfEntityList) {
+            buffer.append(dxfEntity.getDxfStr());
         }
     }
 
@@ -335,7 +335,7 @@ public class DxfDocument implements Closeable {
                 break;
             }
             StringUtil.appendLnCrLf(writeBuffer, pair);
-            if (!newEntityList.isEmpty() && DxfUtil.isPairNameEquals(pair, "$HANDSEED")) {
+            if (!newDxfEntityList.isEmpty() && DxfUtil.isPairNameEquals(pair, "$HANDSEED")) {
                 pair = StreamUtil.readNextPair(br);
                 if (pair == null) {
                     return;

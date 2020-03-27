@@ -1,7 +1,7 @@
 package com.bjak.dxfreduce.entity;
 
 import com.bjak.dxfreduce.Vector2;
-import com.bjak.dxfreduce.entity.base.BaseEntity;
+import com.bjak.dxfreduce.entity.base.BaseDxfEntity;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,23 +18,40 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LwPolyLine extends BaseEntity {
+public class DxfLwPolyLine extends BaseDxfEntity {
 
+    /**
+     * 各个点的集合
+     */
     private List<Vector2> points;
     private boolean isClose = false;
 
-    public LwPolyLine() {
+    public DxfLwPolyLine() {
         points = new ArrayList<>();
     }
 
+    /**
+     * 向多线段中添加一个坐标点
+     *
+     * @param p 坐标点
+     */
     public void addPoint(Vector2 p) {
         points.add(p);
     }
 
+    /***
+     * 从多线段中移除一个坐标点
+     * @param p 坐标点
+     */
     public void removePoint(Vector2 p) {
         points.remove(p);
     }
 
+    /**
+     * 多线段图元中内容是否为空
+     *
+     * @return 若图元空不包含任何坐标点返回true
+     */
     public boolean isEmpty() {
         return points.isEmpty();
     }

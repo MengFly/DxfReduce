@@ -18,7 +18,7 @@ import java.awt.*;
  */
 @Getter
 @Setter
-public abstract class BaseEntity implements Entity {
+public abstract class BaseDxfEntity implements DxfEntity {
     protected long meta;
     protected Color color = Color.BLACK;
     protected LineWidth lineWidth = LineWidth.LW_0;
