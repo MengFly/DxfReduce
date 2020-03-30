@@ -1,7 +1,8 @@
 package com.bjak.dxfreduce;
 
 import com.bjak.dxfreduce.entity.*;
-import com.bjak.dxfreduce.entity.base.*;
+import com.bjak.dxfreduce.entity.base.BaseDxfEntity;
+import com.bjak.dxfreduce.entity.base.DxfEntity;
 import com.bjak.dxfreduce.util.DxfUtil;
 import com.bjak.dxfreduce.util.StreamUtil;
 import com.bjak.dxfreduce.util.StringUtil;
@@ -99,8 +100,11 @@ public class DxfDocWriter implements Closeable {
         }
         dxfEntity.setMeta(++maxMeta);
         this.newDxfEntityList.add(dxfEntity);
-        if (dxfEntity instanceof DxfCircle && ((DxfCircle) dxfEntity).isSolid()) {
-            addEntity(DxfHatch.buildHatchBy((DxfCircle) dxfEntity));
+        if (dxfEntity instanceof DxfCircle || dxfEntity instanceof DxfLwPolyLine) {
+            if (((BaseDxfEntity) dxfEntity).isSolid()) {
+                addEntity(DxfHatch.buildHatchBy((BaseDxfEntity) dxfEntity));
+            }
+
         }
     }
 
@@ -111,6 +115,13 @@ public class DxfDocWriter implements Closeable {
      */
     public void removeEntity(DxfEntity dxfEntity) {
         this.newDxfEntityList.remove(dxfEntity);
+        for (DxfEntity entity : newDxfEntityList) {
+            if (entity instanceof DxfHatch) {
+                if (((DxfHatch) dxfEntity).getDxfSolid().getDxfEntity() == dxfEntity) {
+                    this.newDxfEntityList.remove(dxfEntity);
+                }
+            }
+        }
     }
 
     /**
@@ -148,8 +159,14 @@ public class DxfDocWriter implements Closeable {
         save(saveDxfFilePath, false, containNewEntity);
     }
 
-    private void save(String saveDxfFilePath, boolean justSaveEntity, boolean containNewEntity) {
-        try (BufferedWriter writer = StreamUtil.getFileWriter(saveDxfFilePath, charset)) {
+    public String readString(boolean containNewEntity) {
+        StringBuilder result = new StringBuilder();
+        read(false, containNewEntity, result::append);
+        return result.toString();
+    }
+
+    private void read(boolean justSaveEntity, boolean containNewEntity, ReadDxfConsumer readStr) {
+        try {
             if (dxfFile != null) {
                 br.mark((int) (dxfFile.length() + 1));
             } else {
@@ -173,17 +190,16 @@ public class DxfDocWriter implements Closeable {
                     } else {
                         handleAll(writeBuffer, pair, nextPairTitleTag, containNewEntity);
                     }
-                    writer.write(writeBuffer.toString());
+                    readStr.accept(writeBuffer.toString());
                     writeBuffer = new StringBuffer();
                     log.info("handle part " + nextPartName + " end");
                 } else if ("EOF".equals(pair[1].trim())) {
                     StringUtil.appendLnCrLf(writeBuffer, pair);
-                    writer.write(writeBuffer.toString());
+                    readStr.accept(writeBuffer.toString());
                     log.info("completed!! dxf reduce end<<<<<<<<<<<<<");
                     break;
                 }
             }
-            writer.flush();
         } catch (Exception e) {
             log.error("Reduce dxf fail!!!!!!", e);
         } finally {
@@ -197,6 +213,17 @@ public class DxfDocWriter implements Closeable {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    private void save(String saveDxfFilePath, boolean justSaveEntity, boolean containNewEntity) {
+        try (BufferedWriter fileWriter = StreamUtil.getFileWriter(saveDxfFilePath, charset)) {
+            read(justSaveEntity, containNewEntity, fileWriter::write);
+            fileWriter.flush();
+        } catch (IOException e) {
+            log.error("save fail", e);
+        }
+
     }
 
     private void justSaveEntity(StringBuffer writeBuffer, String[] pair, String[] nextPairTitleTag,
@@ -361,6 +388,10 @@ public class DxfDocWriter implements Closeable {
     @Override
     public void close() throws IOException {
         StreamUtil.closeStream(br);
-        log.info("Dxf document has been colsed.");
+        log.info("Dxf document has been closed.");
+    }
+
+    interface ReadDxfConsumer {
+        void accept(String string) throws IOException;
     }
 }

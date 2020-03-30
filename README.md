@@ -12,6 +12,7 @@ dxf文件处理库，可以创建、加载dxf文件，并向其中添加新的�
 支持对图元进行填充的图元有
 + Arc
 + Circle
++ LwPolyLine
 
 有待加入的图元有
 + 3DFACE

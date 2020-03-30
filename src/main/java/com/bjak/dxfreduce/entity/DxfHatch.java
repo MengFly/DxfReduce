@@ -2,11 +2,13 @@ package com.bjak.dxfreduce.entity;
 
 import com.bjak.dxfreduce.entity.base.BaseDxfEntity;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
+import lombok.Getter;
 
 
 /**
  * @author wangp
  */
+@Getter
 public class DxfHatch extends BaseDxfEntity {
 
     public enum HatchType {
@@ -18,10 +20,10 @@ public class DxfHatch extends BaseDxfEntity {
 
     private DxfSolid dxfSolid;
 
-    public static DxfHatch buildHatchBy(DxfCircle dxfCircle) {
+    public static DxfHatch buildHatchBy(BaseDxfEntity dxfCircle) {
         DxfHatch dxfHatch = new DxfHatch();
         dxfHatch.dxfSolid = new DxfSolid();
-        dxfHatch.dxfSolid.setDxfCircle(dxfCircle);
+        dxfHatch.dxfSolid.setDxfEntity(dxfCircle);
         dxfHatch.color = dxfCircle.getSolidColor() == null ? dxfCircle.getColor() : dxfCircle.getSolidColor();
         return dxfHatch;
     }

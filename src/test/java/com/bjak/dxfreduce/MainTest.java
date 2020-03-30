@@ -12,13 +12,14 @@ import java.util.Random;
 public class MainTest {
 
     public static void main(String[] args) {
-        try (DxfDocWriter dxfDocWriter = new DxfDocWriter("E:\\testDxf\\test111.dxf")) {
-            dxfDocWriter.save("E:\\testDxf\\test111_save.dxf", false);
-            dxfDocWriter.saveEntities("E:\\testDxf\\test111_saveen.dxf", false);
-        } catch (IOException e) {
-
-        }
-//        test1();
+//        try (DxfDocWriter dxfDocWriter = new DxfDocWriter("E:\\testDxf\\test111.dxf")) {
+//            dxfDocWriter.save("E:\\testDxf\\test111_save.dxf", false);
+//            dxfDocWriter.saveEntities("E:\\testDxf\\test111_saveen.dxf", false);
+//
+//        } catch (IOException e) {
+//
+//        }
+        test1();
 
     }
 
@@ -56,9 +57,12 @@ public class MainTest {
                 dxfLwPolyLine.addPoint(new Vector2(i * 100, 1200));
                 dxfLwPolyLine.addPoint(new Vector2(50 + i * 100, 1200));
                 dxfLwPolyLine.addPoint(new Vector2(60 + i * 100, 1200 - 50));
-                dxfLwPolyLine.addPoint(new Vector2(10 + i * 100, 1200 - 50));
-                dxfLwPolyLine.setClose(i % 5 != 0);
-                dxfLwPolyLine.setLineWidth(lineWidth);
+                if (random.nextDouble() > 0.5) {
+                    dxfLwPolyLine.addPoint(new Vector2(10 + i * 100, 1200 - 50));
+                }
+                if (random.nextDouble() > 0.3) {
+                    dxfLwPolyLine.setSolid(true);
+                }
                 dxfLwPolyLine.setColor(randomColor);
                 dxfDocWriter.addEntity(dxfLwPolyLine);
 
