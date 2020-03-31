@@ -3,6 +3,7 @@ package com.bjak.dxfreduce.entity.base;
 import com.bjak.dxfreduce.entity.LineWidth;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
 import com.bjak.dxfreduce.util.DxfUtil;
+import com.bjak.dxfreduce.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -69,8 +70,9 @@ public abstract class BaseDxfEntity implements DxfEntity {
             color = Color.BLACK;
         }
         String redHex = Integer.toHexString(color.getRed());
-        String greenHex = Integer.toHexString(color.getGreen());
-        String blueHex = Integer.toHexString(color.getBlue());
-        return Integer.parseInt(redHex + greenHex + blueHex, 16);
+        String greenHex = StringUtil.appendStart('0', 2, Integer.toHexString(color.getGreen()));
+        String blueHex = StringUtil.appendStart('0', 2, Integer.toHexString(color.getBlue()));
+        String s = redHex + greenHex + blueHex;
+        return Integer.parseInt(s, 16);
     }
 }

@@ -26,8 +26,8 @@ public class TestUtil {
         try (DxfDocWriter dxfDocWriter = new DxfDocWriter(dxfFilePath, StandardCharsets.UTF_8)) {
             for (int i = 0; i < 50; i++) {
                 BaseDxfEntity apply = fun.apply(i);
-                apply.setColor(randomColor());
-                apply.setLineWidth(randomLw());
+//                apply.setColor(randomColor());
+//                apply.setLineWidth(randomLw());
                 dxfDocWriter.addEntity(apply);
             }
             FileUtil.deleteFile(new File(generateNewDxf));
