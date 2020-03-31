@@ -92,6 +92,12 @@ public class DxfDocWriter implements Closeable {
      * @param dxfEntity 图元
      */
     public void addEntity(DxfEntity dxfEntity) {
+        if (dxfEntity instanceof DxfRay) {
+            if (Vector3.ZERO.equals(((DxfRay) dxfEntity).getDirection())) {
+                log.error(dxfEntity.getEntityName() + " direction cant be zero!!, will ignore this entity");
+                return;
+            }
+        }
         if (dxfEntity instanceof DxfLwPolyLine) {
             if (((DxfLwPolyLine) dxfEntity).isEmpty()) {
                 log.warn("LwPolyLine not contains any point, will ignore this entity");

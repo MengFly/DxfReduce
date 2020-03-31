@@ -62,8 +62,8 @@ public class DxfSolid {
             builder.append(73, 1);
         }
 
-                // 源边界对象数
-                builder.append(97, 1)
+        // 源边界对象数
+        builder.append(97, 1)
                 // 源边界对象的参照
                 .append(330, DxfUtil.formatMeta(dxfEntity.getMeta()))
                 // 图案填充样式：,0 = 填充“奇数奇偶校验”区域（普通样式）,1 = 仅填充最外层区域（“外部”样式）,2 = 填充整个区域（“忽略”样式）

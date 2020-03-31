@@ -8,6 +8,7 @@ dxf文件处理库，可以创建、加载dxf文件，并向其中添加新的�
 + Text
 + Ellipse
 + Ray
++ XLine
 
 支持对图元进行填充的图元有
 + Arc
@@ -16,11 +17,6 @@ dxf文件处理库，可以创建、加载dxf文件，并向其中添加新的�
 
 有待加入的图元有
 + 3DFACE
-+ 3DSOLID
-+ ACAD_PROXY_ENTITY
-+ ATTDEF
-+ ATTRIB
-+ BODY
 + DIMENSION
 + HELIX
 + IMAGE
@@ -50,8 +46,6 @@ dxf文件处理库，可以创建、加载dxf文件，并向其中添加新的�
 + VERTEX
 + VIEWPORT
 + WIPEOUT
-+ XLINE
-
 
 
 ### 使用：

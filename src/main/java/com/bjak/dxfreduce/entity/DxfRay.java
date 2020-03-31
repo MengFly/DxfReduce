@@ -24,6 +24,7 @@ public class DxfRay extends BaseDxfEntity {
      */
     private Vector3 direction;
 
+
     @Override
     protected String getChildDxfStr() {
         return DxfLineBuilder.build()
