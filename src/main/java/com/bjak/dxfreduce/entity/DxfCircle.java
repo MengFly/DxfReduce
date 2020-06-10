@@ -48,6 +48,7 @@ public class DxfCircle extends BaseDxfEntity {
                 .append(40, radius)
                 .toString();
     }
-
 }
+
+
 

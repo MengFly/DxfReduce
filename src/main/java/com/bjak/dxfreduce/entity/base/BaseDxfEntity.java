@@ -3,7 +3,6 @@ package com.bjak.dxfreduce.entity.base;
 import com.bjak.dxfreduce.entity.LineWidth;
 import com.bjak.dxfreduce.util.DxfLineBuilder;
 import com.bjak.dxfreduce.util.DxfUtil;
-import com.bjak.dxfreduce.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,10 +20,30 @@ import java.awt.*;
 @Setter
 public abstract class BaseDxfEntity implements DxfEntity {
     protected long meta;
+    /**
+     * 颜色
+     */
     protected Color color = Color.BLACK;
+    /**
+     * 线宽
+     */
     protected LineWidth lineWidth = LineWidth.LW_0;
+    /**
+     * 是否填充
+     */
     protected boolean solid = false;
+    /**
+     * 填充颜色
+     */
     protected Color solidColor = null;
+    /**
+     * 图形透明度，取值范围为0-100,当alpha为0时，为不透明，当alpha为100的时候，图形将不可见
+     */
+    protected int alpha = 0;
+    /**
+     * 填充透明度
+     */
+    protected int solidAlpha = 0;
 
 
     @Override
@@ -35,6 +54,7 @@ public abstract class BaseDxfEntity implements DxfEntity {
                 .append(100, "AcDbEntity")
                 .append(8, "0")
                 .append(420, formatDxfColor(color))
+                .append(440, alpha)
                 .append(370, lineWidth.getCode())
                 .append(100, getEntityClassName())
                 .append(getChildDxfStr())
@@ -69,10 +89,6 @@ public abstract class BaseDxfEntity implements DxfEntity {
         if (color == null) {
             color = Color.BLACK;
         }
-        String redHex = Integer.toHexString(color.getRed());
-        String greenHex = StringUtil.appendStart('0', 2, Integer.toHexString(color.getGreen()));
-        String blueHex = StringUtil.appendStart('0', 2, Integer.toHexString(color.getBlue()));
-        String s = redHex + greenHex + blueHex;
-        return Integer.parseInt(s, 16);
+        return (color.getRed() << 16) + (color.getGreen() << 8) + color.getBlue();
     }
 }

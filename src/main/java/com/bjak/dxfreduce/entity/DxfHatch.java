@@ -25,6 +25,7 @@ public class DxfHatch extends BaseDxfEntity {
         dxfHatch.dxfSolid = new DxfSolid();
         dxfHatch.dxfSolid.setDxfEntity(dxfCircle);
         dxfHatch.color = dxfCircle.getSolidColor() == null ? dxfCircle.getColor() : dxfCircle.getSolidColor();
+        dxfHatch.alpha = dxfCircle.getSolidAlpha();
         return dxfHatch;
     }
 

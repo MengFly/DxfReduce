@@ -24,6 +24,9 @@ public class DxfLwPolyLine extends BaseDxfEntity {
      * 各个点的集合
      */
     private List<Vector2> points;
+    /**
+     * 多线段是否闭合
+     */
     private boolean isClose = false;
 
     public DxfLwPolyLine() {

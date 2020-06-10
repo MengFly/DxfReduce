@@ -57,8 +57,11 @@ public class DxfText extends BaseDxfEntity {
      * 旋转角度
      */
     private double angle = 0;
+    /**
+     * 倾斜角度
+     */
     private double inclination = 0;
-    private String textStyle = "标准";
+//    private String textStyle = "标准";
     private int reverseType = REVERSE_TYPE_NONE;
     // 暂时不使用这两个属性
     //    private int alignHorizontal = ALIGN_HORIZONTAL_LEFT;
@@ -83,9 +86,6 @@ public class DxfText extends BaseDxfEntity {
         }
         if (inclination != 0) {
             lineBuilder.append(51, inclination);
-        }
-        if ("标准".equals(textStyle)) {
-            lineBuilder.append(7, textStyle);
         }
         if (reverseType != REVERSE_TYPE_NONE) {
             lineBuilder.append(71, reverseType);
